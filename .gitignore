@@ -3,3 +3,11 @@ Backend/node_modules/
 
 
 Backend/config
+
+dashboard/node_modules/
+
+dashboard/config
+
+frontend/node_modules/
+
+frontend/config

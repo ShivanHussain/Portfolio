@@ -1,117 +1,71 @@
-/* eslint-disable no-unused-vars */
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import { Send, Mail, User, FileText } from "lucide-react";
 
 const Contact = () => {
   const [senderName, setSenderName] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
   const handleMessage = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await axios
-      .post(
-        "https://mern-stack-portfolio-backend-bf3p.onrender.com/api/v1/message/send",
-        { senderName, subject, message },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        setSenderName("");
-        setSubject("");
-        setMessage("");
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        setLoading(false);
-      });
+    await axios.post("https://mern-stack-portfolio-backend-bf3p.onrender.com/api/v1/message/send",
+      { senderName, subject, message },
+      { withCredentials: true, headers: { "Content-Type": "application/json" } })
+      .then(res => { toast.success(res.data.message); setSenderName(""); setSubject(""); setMessage(""); setLoading(false); })
+      .catch(error => { toast.error(error.response.data.message); setLoading(false); });
   };
+
   return (
-    <>
-      <div className="overflow-x-hidden">
-        <div className="relative mb-8">
-          <h1
-            className="flex gap-4 items-center text-[1.85rem] sm:text-[2.75rem] md:text-[3rem] 
-            lg:text-[3rem] leading-[56px] md:leading-[67px] lg:leading-[90px] 
-            tracking-[15px] mx-auto w-fit font-extrabold about-h1"
-            style={{
-              background: "hsl(222.2 84% 4.9%)",
-            }}
-          >
-            
-            <span className="text-tubeLight-effect font-extrabold">CONTACT ME</span>
-          </h1>
-          <span className="absolute w-full h-1 top-7 sm:top-7 
-          md:top-8 lg:top-11 z-[-1] bg-slate-200"></span>
+    <div className="w-full">
+      <div className="mb-12">
+        <p className="text-xs uppercase tracking-[0.3em] text-amber-400 mb-3 font-medium">Get in touch</p>
+        <h2 className="section-title text-4xl sm:text-5xl text-white">Contact Me</h2>
+      </div>
+      <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="flex flex-col gap-6">
+          <p className="text-slate-400 text-lg leading-relaxed" style={{ fontFamily: "DM Sans" }}>
+            Have a project in mind or want to discuss DevOps / Cloud opportunities? My inbox is always open.
+          </p>
+          {[
+            { icon: <Mail size={18} />, label: "Email", value: "shivanhussain6@gmail.com" },
+            { icon: <User size={18} />, label: "Availability", value: "Open for DevOps & Cloud roles" },
+          ].map(i => (
+            <div key={i.label} className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.2)" }}>
+                {i.icon}
+              </div>
+              <div>
+                <p className="text-slate-500 text-xs uppercase tracking-wider">{i.label}</p>
+                <p className="text-white text-sm mt-0.5">{i.value}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <form onSubmit={handleMessage} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2 px-1.5">
-            <Label className="text-xl">Your Name</Label>
-            <Input
-              value={senderName}
-              onChange={(e) => setSenderName(e.target.value)}
-              placeholder="Your Name"
-            />
+        <form onSubmit={handleMessage} className="glass rounded-3xl p-8 flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <label className="text-slate-400 text-sm flex items-center gap-2" style={{ fontFamily: "DM Sans" }}><User size={14} />Your Name</label>
+            <input className="form-input" placeholder="John Doe" value={senderName} onChange={e => setSenderName(e.target.value)} required />
           </div>
-          <div className="flex flex-col gap-2 px-1.5">
-            <Label className="text-xl">Subject</Label>
-            <Input
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="Subject"
-            />
+          <div className="flex flex-col gap-2">
+            <label className="text-slate-400 text-sm flex items-center gap-2" style={{ fontFamily: "DM Sans" }}><FileText size={14} />Subject</label>
+            <input className="form-input" placeholder="DevOps Opportunity" value={subject} onChange={e => setSubject(e.target.value)} required />
           </div>
-          <div className="flex flex-col gap-2 px-1.5">
-            <Label className="text-xl">Message</Label>
-            <Input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Your Message"
-            />
+          <div className="flex flex-col gap-2">
+            <label className="text-slate-400 text-sm flex items-center gap-2" style={{ fontFamily: "DM Sans" }}><Mail size={14} />Message</label>
+            <textarea className="form-input resize-none" rows={4} placeholder="Tell me about the role or project..."
+              value={message} onChange={e => setMessage(e.target.value)} required />
           </div>
-          <div className="flex justify-end">
-            {!loading ? (
-              <Button className="w-full sm:w-52 bg-blue-500 hover:bg-blue-700 text-white">SEND MESSAGE</Button>
-            ) : (
-              <button
-                disabled
-                type="button"
-                className="w-full sm:w-52 text-slate-900  bg-white hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-white dark:hover:bg-slate-200 dark:focus:ring-blue-800 inline-flex items-center"
-              >
-                <svg
-                  aria-hidden="true"
-                  role="status"
-                  className="inline w-4 h-4 me-3 text-slate-950 animate-spin"
-                  viewBox="0 0 100 101"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                    fill="#E5E7EB"
-                  />
-                  <path
-                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                    fill="currentColor"
-                  />
-                </svg>
-                Sending...
-              </button>
-            )}
-          </div>
+          <button type="submit" disabled={loading} className="btn-primary flex items-center justify-center gap-2 mt-2 w-full">
+            {loading ? (<><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="32" strokeDashoffset="10" /></svg>Sending...</>) : (<><Send size={16} />Send Message</>)}
+          </button>
         </form>
       </div>
-    </>
+    </div>
   );
 };
-
 export default Contact;
