@@ -7,14 +7,12 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [resumeUrl, setResumeUrl] = useState(null);
 
-  // Scroll listener
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Fetch resume URL from API
   useEffect(() => {
     const fetchResume = async () => {
       try {
@@ -31,28 +29,18 @@ const Navbar = () => {
     fetchResume();
   }, []);
 
-  // Nav links array
   const links = ["About", "Skills", "Projects", "Contact"];
 
-  // Scroll to section
   const scrollTo = (id) => {
     const el = document.getElementById(id.toLowerCase());
     if (el) el.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
-  // Open in new tab AND trigger download simultaneously
+  // sirf view — naye tab mein kholo
   const handleResume = () => {
     if (!resumeUrl) return;
-    // 1. View in new tab
     window.open(resumeUrl, "_blank");
-    // 2. Download via hidden anchor
-    const link = document.createElement("a");
-    link.href = resumeUrl;
-    link.download = "Shivan_Hussain_Resume";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
@@ -79,8 +67,6 @@ const Navbar = () => {
             <Terminal size={15} className="text-white" />
           </span>
           <span className="glow-cyan">SH</span>
-          <span className="text-white" style={{ opacity: 0.3 }}>/</span>
-          <span className="text-white" style={{ opacity: 0.55, fontSize: "0.85rem" }}>devops</span>
         </div>
 
         {/* Desktop nav links */}
@@ -98,15 +84,12 @@ const Navbar = () => {
             <button
               onClick={handleResume}
               className="btn-primary flex items-center gap-2 text-sm"
-              title="View & Download Resume"
             >
               <Download size={14} />
               Resume
             </button>
           ) : (
-            <span
-              className="btn-outline flex items-center gap-2 text-sm opacity-40 cursor-not-allowed"
-            >
+            <span className="btn-outline flex items-center gap-2 text-sm opacity-40 cursor-not-allowed">
               <Download size={14} />
               Resume
             </span>
@@ -114,10 +97,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile hamburger */}
-        <button
-          className="md:hidden text-white"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="md:hidden text-white" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
@@ -126,11 +106,7 @@ const Navbar = () => {
       {menuOpen && (
         <div className="md:hidden glass px-6 py-5 flex flex-col gap-4">
           {links.map((l) => (
-            <button
-              key={l}
-              onClick={() => scrollTo(l)}
-              className="nav-link text-left text-base"
-            >
+            <button key={l} onClick={() => scrollTo(l)} className="nav-link text-left text-base">
               {l}
             </button>
           ))}
